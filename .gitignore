@@ -1,45 +1,12 @@
-<<<<<<< HEAD
-.DS_Store
-
-application/cache/*
-!application/cache/index.html
-
-application/logs/*
-!application/logs/index.html
-
-!application/*/.htaccess
-
-composer.lock
-
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
-/vendor/
-
-# IDE Files
-#-------------------------
-/nbproject/
-.idea/*
-
-## Sublime Text cache files
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-*.sublime-workspace
-*.sublime-project
-/tests/tests/
-/tests/results/
-=======
 # These are some examples of commonly ignored file patterns.
 # You should customize this list as applicable to your project.
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+application/config/database.php
 # Node artifact files
 node_modules/
 dist/
-
 # Compiled Java class files
 *.class
 
@@ -81,4 +48,3 @@ Thumbs.db
 *.mov
 *.wmv
 
->>>>>>> e7dc772fe7f79d8ae83fe4da09db13bf69711212
