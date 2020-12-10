@@ -4,10 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Faculty Profile</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="stylesheet" href="<?php echo base_url(); ?>static/css/style.css">
 </head>
 
 <body>
+
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand">FET</a>
+    <form class="d-flex">
+      <button class="btn btn-outline-success"><a href="<?php echo base_url(); ?>index.php/google_login/login">Google</a></button>
+    </form>
+  </div>
+</nav>
+
     <section class="left">
         <h1>Spotlight</h1>
         <ul type="none">
