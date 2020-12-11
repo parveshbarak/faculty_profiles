@@ -38,25 +38,27 @@ class Google_login extends CI_Controller {
 
                 if ($this->google_login_model->Is_already_register($data['id'])) {
                     //update data
-                    $user_data = array(
+                    $users= array(
                         'name' => $data['given_name'],
                         'email' => $data['email'],
                         'password' => $data['id']
                     );
-                    $this->google_login_model->Update_user_data($user_data, $data['id']);
-                    $this->session->set_userdata('user_data', $user_data);
-                    
+                    //print_r($users); die;
                     
                     $this->load->model('Select');
                     $query = $this->Select->code_select($data['email']);
-                    //$this->load->view('profile', $data);
                     $query = json_decode(json_encode($query), TRUE);
-                    //print_r($query); die;
                     $code = $query[0]['Code'];
                     $query['h'] = $this->Select->select3($code);
-                    //$query['h'] = json_decode(json_encode($query), TRUE);
-                    //print_r($query); die;
-                    //$this->load->view('profile', $query); 
+                    //$query['h'] = json_decode(json_encode($query['h']), TRUE);  
+                    
+                    $user_data = array(
+                        'users' => $users,
+                        'query' => $query
+                    );
+                    
+                    $this->google_login_model->Update_user_data($user_data, $data['id']);
+                    $this->session->set_userdata('user_data', $user_data);
                     
                 } else {
 //                    Case-1 : insert data
@@ -88,12 +90,12 @@ class Google_login extends CI_Controller {
         if (!$this->session->userdata('access_token')) {
             $login_button = '<a href="' . $google_client->createAuthUrl() . '">Login With Google</a>';
             $data['login_button'] = $login_button;
-            //$this->load->view('profile_dummy', $data);
-            //print_r($data); die;
             $basic = array_merge($data, $query1);
             $this->load->view('google_login1', $basic);
         } else {
-            $this->load->view('google_login1', $query);
+            $q = $this->session->userdata;
+            $query2['h'] = $this->session->userdata['user_data']['query']['h'];
+            $this->load->view('google_login1', $query2);
         }
     }
 
