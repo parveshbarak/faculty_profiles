@@ -43,32 +43,38 @@ class Google_login extends CI_Controller {
                         'email' => $data['email'],
                         'password' => $data['id']
                     );
-                    //print_r($users); die;
                     
                     $this->load->model('Select');
                     $query = $this->Select->code_select($data['email']);
                     $query = json_decode(json_encode($query), TRUE);
-                    $code = $query[0]['Code'];
-                    $query['h'] = $this->Select->select3($code);
-                    //$query['h'] = json_decode(json_encode($query['h']), TRUE);  
+                    $code = $query[0];  
                     
                     $user_data = array(
                         'users' => $users,
-                        'query' => $query
+                        'code' => $code
                     );
                     
                     $this->google_login_model->Update_user_data($user_data, $data['id']);
                     $this->session->set_userdata('user_data', $user_data);
                     
+                    
                 } else {
 //                    Case-1 : insert data
-                    
-//                    $user_data = array(
-//                        'password' => $data['id'],
+//
+//                    $users= array(
 //                        'name' => $data['given_name'],
 //                        'email' => $data['email'],
+//                        'password' => $data['id'],
+//                    ); 
+                    
+//                    //Make a Code for tha newly inserted faculty $code;
+//                    
+//                    $user_data = array(
+//                        'users' => $users,
+//                        'code' => $code
 //                    );
-//                    $this->google_login_model->Insert_user_data($user_data);
+//                    
+//                    $this->google_login_model->Insert_user_data($user_data, $data['id']);
 //                    $this->session->set_userdata('user_data', $user_data);
 
                     
@@ -83,8 +89,13 @@ class Google_login extends CI_Controller {
             }
         }
         
+        // Duumy Profile
         $this->load->model('Select');
         $query1['h'] = $this->Select->select2();
+        
+        //Actual Profile of logged in User
+        $this->load->model('Select');
+        //$query2['h'] = $this->Select->select3($this->session->userdata['user_data']['code']['Code']);
         
         $login_button = '';
         if (!$this->session->userdata('access_token')) {
@@ -93,9 +104,75 @@ class Google_login extends CI_Controller {
             $basic = array_merge($data, $query1);
             $this->load->view('google_login1', $basic);
         } else {
-            $q = $this->session->userdata;
-            $query2['h'] = $this->session->userdata['user_data']['query']['h'];
+            $q = $this->session->userdata['user_data'];
+            $this->load->model('Select');
+            $query2['h'] = $this->Select->select3($this->session->userdata['user_data']['code']['Code']);
             $this->load->view('google_login1', $query2);
+        }
+    }
+    
+    private function login_check($session_data,$google_client) {
+        
+    }
+    
+    function all_confrences() {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect('index.php');
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Confrences');
+            $data['h'] = $this->Confrences->select($code);
+            //$data = json_decode(json_encode($data), TRUE);
+            //print_r($data); die;
+            $this->load->view('Confrences/all_confrences', $data);
+        }
+    }
+    
+    function edit_confrences() {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect('index.php');
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $uri = $_SERVER['REQUEST_URI'];
+            $uri_array = explode('/',$uri);
+            $conf_id = end($uri_array);
+            $this->load->model('Confrences');
+            $data['h'] = $this->Confrences->select4($code,$conf_id);
+            $this->load->view('Confrences/edit_confrences', $data);
+        }
+    }
+    
+    function update_confrence() {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect('index.php');
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            //code krna h
+        }
+    }
+    
+    function edit_profile() {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect('index.php');
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Select');
+            $form_query = $this->Select->select3($code);
+            $form_query = json_decode(json_encode($form_query), TRUE);
+            //print_r($form_query['2']); die;
+            $this->load->view('edit_profile');
         }
     }
 

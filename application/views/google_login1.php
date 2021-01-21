@@ -90,7 +90,7 @@
                 <!-- =========================================================================== -->
 
                 <?php if ($h[2]) { ?>
-                    <h1>Conference</h1>
+                <h1>Conference <a href="<?php echo base_url(); ?>index.php/google_login/all_confrences">Edit Confrences</a></h1>
                     <?php  //echo print_r($h[1]);
                     foreach ($h[2] as $row) {
                     ?>

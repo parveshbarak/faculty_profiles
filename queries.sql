@@ -248,6 +248,14 @@ INSERT INTO `books` (`user_id`, `BookAuthor`, `BookTitle`, `BookCoAuthor`, `Book
 ('GKV/061', 'Hemalatha K', 'The Quest for Belief: A Study of the Novels of TheodoreDreiser', '0', 'Rajat Publications, New Delhi', 'ISBN 81-7880-252-X', '2006', '197', '', '', '', '');
 
 
+
+
+--
+-- Adding sr. no to confrences
+--
+Alter table confrences add column `serial_no` int not null;
+
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

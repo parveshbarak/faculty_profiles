@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/var/www/html/faculty_profiles/.gitignore</file>
-            <file>file:/var/www/html/faculty_profiles/application/models/Select.php</file>
-            <file>file:/var/www/html/faculty_profiles/application/views/google_login1.php</file>
-            <file>file:/var/www/html/faculty_profiles/application/controllers/Home.php</file>
-            <file>file:/var/www/html/faculty_profiles/application/views/profile.php</file>
-            <file>file:/var/www/html/faculty_profiles/application/views/google_login.php</file>
-            <file>file:/var/www/html/faculty_profiles/application/models/Google_login_model.php</file>
-            <file>file:/var/www/html/faculty_profiles/application/controllers/Google_login.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
