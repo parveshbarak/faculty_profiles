@@ -1,4 +1,5 @@
 
+65.92817\
 <?php
 
 class Google_login_model extends CI_Model {
@@ -70,6 +71,7 @@ class Google_login_model extends CI_Model {
     
 
     function Insert_user_data($data) {
+        //print_r($data); die;
         $this->db->insert('users', $data);
     }
 

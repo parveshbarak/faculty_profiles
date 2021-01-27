@@ -63,9 +63,9 @@
 
     <section class="right">
         <header>
-            <h1><?php echo $h[0][0]->Name ?></h1>
+            <h1><?php echo $h[0] ? $h[0][0]->Name : "" ?></h1>
             <p>
-                <strong>Post :</strong> <?php echo $h[0][0]->Post ?><br><strong>Faculty :</strong><?php echo $h[0][0]->Faculty ?><br><strong>Department :</strong><?php echo $h[0][0]->Dept ?><br>
+                <strong>Post :</strong> <?php echo $h[0] ? $h[0][0]->Post : "" ?><br><strong>Faculty :</strong><?php echo $h[0] ? $h[0][0]->Faculty : "" ?><br><strong>Department :</strong><?php echo $h[0] ? $h[0][0]->Dept : "" ?><br>
             </p>
         </header>
 

@@ -60,22 +60,19 @@ class Google_login extends CI_Controller {
                     
                 } else {
 //                    Case-1 : insert data
-//
-//                    $users= array(
-//                        'name' => $data['given_name'],
-//                        'email' => $data['email'],
-//                        'password' => $data['id'],
-//                    ); 
+//                  
+                    $code = 'GKV/065';
                     
-//                    //Make a Code for tha newly inserted faculty $code;
+                    $user_data = array(
+                        'name' => $data['given_name'],
+                        'email' => $data['email'],
+                        'password' => $data['id'],
+                        'code' => $code
+                    );
 //                    
-//                    $user_data = array(
-//                        'users' => $users,
-//                        'code' => $code
-//                    );
-//                    
-//                    $this->google_login_model->Insert_user_data($user_data, $data['id']);
-//                    $this->session->set_userdata('user_data', $user_data);
+                    $this->google_login_model->Insert_user_data($user_data, $data['id']);
+                    //print_r($data['id']); die;
+                    $this->session->set_userdata('user_data', $user_data);
 
                     
 //                    Case-2 : Do not insert data 
