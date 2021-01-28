@@ -1,15 +1,20 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+use GuzzleHttp\Psr7\Message;
 
-class Google_login extends CI_Controller {
+defined('BASEPATH') or exit('No direct script access allowed');
 
-    public function __construct() {
+class Google_login extends CI_Controller
+{
+
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('google_login_model');
     }
 
-    function login() {
+    function login()
+    {
         include_once APPPATH . "libraries/vendor/autoload.php";
 
         $google_client = new Google_Client();
@@ -38,62 +43,60 @@ class Google_login extends CI_Controller {
 
                 if ($this->google_login_model->Is_already_register($data['id'])) {
                     //update data
-                    $users= array(
+                    $users = array(
                         'name' => $data['given_name'],
                         'email' => $data['email'],
                         'password' => $data['id']
                     );
-                    
+
                     $this->load->model('Select');
                     $query = $this->Select->code_select($data['email']);
                     $query = json_decode(json_encode($query), TRUE);
-                    $code = $query[0];  
-                    
+                    $code = $query[0];
+
                     $user_data = array(
                         'users' => $users,
                         'code' => $code
                     );
-                    
+
                     $this->google_login_model->Update_user_data($user_data, $data['id']);
                     $this->session->set_userdata('user_data', $user_data);
-                    
-                    
                 } else {
-//                    Case-1 : insert data
-//                  
+                    //Case-1 : insert data
+                    //                  
                     $code = 'GKV/065';
-                    
+
                     $user_data = array(
                         'name' => $data['given_name'],
                         'email' => $data['email'],
                         'password' => $data['id'],
                         'code' => $code
                     );
-//                    
+                    //                    
                     $this->google_login_model->Insert_user_data($user_data, $data['id']);
                     //print_r($data['id']); die;
                     $this->session->set_userdata('user_data', $user_data);
 
-                    
-//                    Case-2 : Do not insert data 
-//                    show a message that you are  not a autheniticated user!
+
+                    // Case-2 : Do not insert data 
+                    // show a message that you are  not a autheniticated user!
                     $this->session->unset_userdata('access_token');
                     $this->session->unset_userdata('user_data');
                     redirect('index.php');
                     echo 'You are not allowed to login!!!';  // A alert message here!!
-                    
+
                 }
             }
         }
-        
+
         // Duumy Profile
         $this->load->model('Select');
         $query1['h'] = $this->Select->select2();
-        
+
         //Actual Profile of logged in User
         $this->load->model('Select');
         //$query2['h'] = $this->Select->select3($this->session->userdata['user_data']['code']['Code']);
-        
+
         $login_button = '';
         if (!$this->session->userdata('access_token')) {
             $login_button = '<a href="' . $google_client->createAuthUrl() . '">Login With Google</a>';
@@ -107,12 +110,13 @@ class Google_login extends CI_Controller {
             $this->load->view('google_login1', $query2);
         }
     }
-    
-    private function login_check($session_data,$google_client) {
-        
+
+    private function login_check($session_data, $google_client)
+    {
     }
-    
-    function all_confrences() {
+
+    function all_confrences()
+    {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
@@ -127,8 +131,9 @@ class Google_login extends CI_Controller {
             $this->load->view('Confrences/all_confrences', $data);
         }
     }
-    
-    function edit_confrences() {
+
+    function edit_confrences()
+    {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
@@ -137,27 +142,42 @@ class Google_login extends CI_Controller {
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
             $uri = $_SERVER['REQUEST_URI'];
-            $uri_array = explode('/',$uri);
+            $uri_array = explode('/', $uri);
             $conf_id = end($uri_array);
             $this->load->model('Confrences');
-            $data['h'] = $this->Confrences->select4($code,$conf_id);
+            $data['h'] = $this->Confrences->select4($code, $conf_id);
             $this->load->view('Confrences/edit_confrences', $data);
         }
     }
-    
-    function update_confrence() {
+
+    function update_confrence()
+    {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
             redirect('index.php');
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
-            $code = $this->session->userdata['user_data']['code']['Code'];
-            //code krna h
+            $this->load->helper(array('form', 'url'));
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('confrence_type', 'Confrence Type', 'required');
+            $this->form_validation->set_rules('confrence_place', 'Confrrence Place', 'required');
+            $this->form_validation->set_rules('confrence_topic', 'Confrence Topic', 'required');
+            $this->form_validation->set_rules('confrence_organised_by', 'Confrence Organised By', 'required');
+            $this->form_validation->set_rules('confrence_date_fm', 'Confrence Date from', 'required');
+            $this->form_validation->set_rules('confrence_date_to', 'Confrence Date To', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo validation_errors();
+            } else {
+                // $code = $this->session->userdata['user_data'];
+                $form_data = $this->input->post(); //grave data whatever you want!
+                echo "data successfully updated";
+            }
         }
     }
-    
-    function edit_profile() {
+
+    function edit_profile()
+    {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
@@ -173,12 +193,15 @@ class Google_login extends CI_Controller {
         }
     }
 
-    function logout() {
+    function logout()
+    {
         $this->session->unset_userdata('access_token');
         $this->session->unset_userdata('user_data');
         redirect('index.php/google_login/login');
     }
 
+    function error_alert($message)
+    {
+        echo "<script>alert('$message');</script>";
+    }
 }
-
-?>

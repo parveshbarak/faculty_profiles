@@ -15,8 +15,8 @@ class Confrences extends CI_Model
 
       return $result;
    }
-   
-   public function select4($code,$id)
+
+   public function select4($code, $id)
    {
       //data is retrive from this query 
       $query = $this->db->query("SELECT * FROM confrences WHERE user_id='$code' AND id = '$id'");
@@ -41,13 +41,13 @@ class Confrences extends CI_Model
 
       return array($result1, $result2, $result3, $result4, $result5);
    }
-   
+
    public function code_select($email)
    {
-       // get code using email
-       $query = $this->db->query("Select Code from users WHERE email = '$email'");
-       $result = $query->result();
-       return $result;
+      // get code using email
+      $query = $this->db->query("Select Code from users WHERE email = '$email'");
+      $result = $query->result();
+      return $result;
    }
 
    public function select3($code)
@@ -65,5 +65,10 @@ class Confrences extends CI_Model
       $result5 = $query5->result();
 
       return array($result1, $result2, $result3, $result4, $result5);
+   }
+
+   public function confrence($data, $code, $id)
+   {
+      
    }
 }

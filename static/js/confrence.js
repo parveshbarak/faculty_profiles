@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    $('#confrence_type, #confrence_place, #confrence_topic, #confrence_organised_by, #confrence_date_fm, #confrence_date_to').attr('autocomplete', 'none');
     $('#confrence_form').validate({
         onfocusout: function (element) {
             this.element(element);
@@ -16,7 +15,6 @@ $(document).ready(function () {
             },
             confrence_organised_by: {
                 required: true
-
             },
             confrence_date_fm: {
                 required: true
@@ -41,14 +39,15 @@ $(document).ready(function () {
             $(label).closest('input').removeClass('error');
         },
         submitHandler: function () {
+            var data = $('#confrence_form').serialize();
             var url = "/google_login/update_confrence";
             NProgress.start();
-            var options = {
-                url: url,
-                success: generic_success,
-                error: onError,
+            $.ajax(url, {
+                data: data,
+                success: alert("Data success"),
+                error: alert("Error occured"),
                 type: "POST"
-            };
+            });
             NProgress.start();
             $('.loading_image').show();
             $('#confrence_form').prop('method', 'POST').ajaxSubmit(options);

@@ -16,7 +16,7 @@ class Login_Helper {
 
         $google_client->addScope('profile');
         
-        print_r($google_client); die;
+        // print_r($google_client); die;
         return $google_client;
     }
     
