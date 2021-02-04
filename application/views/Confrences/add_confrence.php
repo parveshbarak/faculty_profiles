@@ -22,47 +22,47 @@
             <div class="form-title text-center">
                 Confrences
             </div>
-            <form id="confrence_form" method="POST" enctype="multipart/form-data">
-                <input type="hidden" id="Id" name="Id" value="<?php echo $h['0']->id ?>">
+            <form id="add_confrence_form" method="POST" enctype="multipart/form-data">
                 <div class="form-group ">
                     <div class="output_image_container">
                         <img id="output_image" src="<?php echo 'profile' ?>" />
                         <small>Image size should be less than 128kb.</small>
                     </div>
                     <div>
-                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(event)">
+                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
                     </div>
                 </div>
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="ConfType">Confrence Type</label>
-                        <input type="text" class="form-control" id="ConfType" name="ConfType" value="<?php echo $h['0']->ConfType ?>" autocomplete="none">
+                        <input type="text" class="form-control" id="ConfType" name="ConfType" autocomplete="none">
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="ConfPlace">Confrrence Place</label>
-                        <input type="text" class="form-control" id="ConfPlace" name="ConfPlace" value="<?php echo $h['0']->ConfPlace ?>" autocomplete="none">
+                        <input type="text" class="form-control" id="ConfPlace" name="ConfPlace" autocomplete="none">
                     </div>
                 </div>
                 <div class="form-group mt-3 ml-3">
                     <label class="label" for="ConfTopic">Confrence Topic</label>
-                    <input type="text" name="ConfTopic" class="form-control" id="ConfTopic" value="<?php echo $h['0']->ConfTopic ?>" autocomplete="none">
+                    <input type="text" name="ConfTopic" class="form-control" id="ConfTopic" autocomplete="none">
                 </div>
                 <div class="form-group mt-3 ml-3">
                     <label class="label" for="ConfOrgBy">Confrence Organised By</label>
-                    <input type="text" class="form-control" id="ConfOrgBy" value="<?php echo $h['0']->ConfOrgBy ?>" autocomplete="none" name="ConfOrgBy">
+                    <input type="text" class="form-control" id="ConfOrgBy"autocomplete="none" name="ConfOrgBy">
                 </div>
 
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="ConfDateFm">Confrence Date from</label>
-                        <input type="text" class="form-control" id="ConfDateFm" name="ConfDateFm" value="<?php echo $h['0']->ConfDateFm == "NA" ? "" : $h['0']->ConfDateFm ?>" autocomplete="none">
+                        <input type="text" class="form-control" id="ConfDateFm" name="ConfDateFm" autocomplete="none">
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="ConfDateTo">Confrence Date To</label>
-                        <input type="text" class="form-control" id="ConfDateTo" name="ConfDateTo" value="<?php echo $h['0']->ConfDateTo == "NA" ? "" : $h['0']->ConfDateTo ?>" autocomplete="none">
+                        <input type="text" class="form-control" id="ConfDateTo" name="ConfDateTo" autocomplete="none">
                     </div>
                 </div>
                 <div class="form-group form_button_right ">
+                    <!-- <input type="submit" class="sbmt_btn btn btn-primary" value="Submit"> -->
                     <button type="submit" class="sbmt_btn btn btn-primary">Submit</button>
                 </div>
             </form>
@@ -75,9 +75,9 @@
 
     <script type="text/javascript">
         $("button").click(function() {
-            var data = $('#confrence_form').serialize();
+            var data = $('#add_confrence_form').serialize();
             $.ajax({
-                url: 'http://localhost/faculty_profiles/index.php/google_login/update_confrence',
+                url: 'http://localhost/faculty_profiles/index.php/google_login/add_confrence',
                 type: 'POST',
                 data: data,
                 error: function() {
@@ -89,6 +89,16 @@
             });
             return false;
         });
+        function preview_image(input){
+            var file = $("input[type=file]").get(0).files[0];
+            if(file){
+                var reader = new FileReader();
+                reader.onload = function(){
+                    $("#output_image").attr("src", reader.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
     </script>
 
 </body>

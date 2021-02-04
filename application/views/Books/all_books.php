@@ -17,7 +17,7 @@ $count =0;
           </div>
         </nav>
             <div class="heading btn btn-secondry">
-                <h4>Confrence List</h4>
+                <h4>Book List</h4>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
@@ -35,10 +35,10 @@ $count =0;
                     ?>
                         <tr>
                             <th scope="row"><?php echo $count; ?></th>
-                            <td><?php echo $conf->ConfType ?></td>
-                            <td><?php echo $conf->ConfTopic ?></td>
-                            <td><?php echo $conf->ConfDateFm ?></td>
-                            <td><a href="<?php echo base_url(); ?>index.php/google_login/edit_confrences/<?php echo $conf->id ?>">Edit </a> </td>
+                            <td><?php echo $conf->BookAuthor ?></td>
+                            <td><?php echo $conf->BookCoAuthor ?></td>
+                            <td><?php echo $conf->BookPublication ?></td>
+                            <td><a href="<?php echo base_url(); ?>index.php/google_login/edit_books/<?php echo $conf->id ?>">Edit </a> </td>
                         </tr>
                     <?php } ?>
                 </tbody>

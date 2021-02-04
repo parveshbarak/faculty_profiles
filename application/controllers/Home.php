@@ -8,11 +8,11 @@ class Home extends CI_Controller {
 		//load the database  
 		$this->load->database();
 		//load the model  
-		$this->load->model('Select');
+		$this->load->model('Profile');
 		//load the method of model  
-		$data['h'] = $this->Select->select2();
+		$data['h'] = $this->Profile->dummy();
                 //print_r($data); die;
-		$this->load->view('profile', $data);
+		$this->load->view('home', $data);
 	}
         
 }

@@ -17,7 +17,7 @@ $count =0;
           </div>
         </nav>
             <div class="heading btn btn-secondry">
-                <h4>Confrence List</h4>
+                <h4>Confrences List</h4>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
