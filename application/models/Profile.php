@@ -12,10 +12,10 @@ class Profile extends CI_Model
    {
       $code = 'GKV/061'; 
       $query1 = $this->db->query("SELECT * FROM faculties WHERE user_id='$code'");
-      $query2 = $this->db->query("SELECT * FROM journals WHERE user_id='$code'");
-      $query3 = $this->db->query("SELECT * FROM confrences WHERE user_id='$code'");
-      $query4 = $this->db->query("SELECT * FROM lectures WHERE user_id ='$code' ");
-      $query5 = $this->db->query("SELECT * FROM books WHERE user_id='$code'");
+      $query2 = $this->db->query("SELECT * FROM journals WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");
+      $query3 = $this->db->query("SELECT * FROM confrences WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");
+      $query4 = $this->db->query("SELECT * FROM lectures WHERE user_id ='$code' AND serial_no BETWEEN 1 and 10");
+      $query5 = $this->db->query("SELECT * FROM books WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");
       $result1 = $query1->result();
       $result2 = $query2->result();
       $result3 = $query3->result();
@@ -29,10 +29,10 @@ class Profile extends CI_Model
    {
       //data is retrive from this query
       $query1 = $this->db->query("SELECT * FROM faculties WHERE user_id='$code'");
-      $query2 = $this->db->query("SELECT * FROM journals WHERE user_id='$code'");
-      $query3 = $this->db->query("SELECT * FROM confrences WHERE user_id='$code'");
-      $query4 = $this->db->query("SELECT * FROM lectures WHERE user_id ='$code' ");
-      $query5 = $this->db->query("SELECT * FROM books WHERE user_id='$code'");
+      $query2 = $this->db->query("SELECT * FROM journals WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");
+      $query3 = $this->db->query("SELECT * FROM confrences WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");
+      $query4 = $this->db->query("SELECT * FROM lectures WHERE user_id ='$code' AND serial_no BETWEEN 1 and 10");
+      $query5 = $this->db->query("SELECT * FROM books WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");
       $result1 = $query1->result();
       $result2 = $query2->result();
       $result3 = $query3->result();

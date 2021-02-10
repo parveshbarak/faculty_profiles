@@ -1,4 +1,6 @@
 <?php
+$scopes= array("UGC","SCI","Others","SCOPUS");
+$publications = array("National","International");
 ?>
 
 <html>
@@ -13,43 +15,36 @@
     <div class="container">
         <nav class="navbar navbar-light bg-light main-bar">
           <div class="container-fluid">
-            <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/login">
-              My Profile
+            <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/all_journals">
+              Journal List
             </a>
           </div>
         </nav>
         <div class="generic_form">
             <div class="form-title text-center">
-                Books
+                Journals
             </div>
             <form id="book_form" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="Id" name="Id" value="<?php echo $h['0']->id ?>">
-                <div class="form-group ">
-                    <div class="output_image_container">
-                        <img id="output_image" src="<?php echo 'profile' ?>" />
-                        <small>Image size should be less than 128kb.</small>
-                    </div>
-                    <div>
-                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(event)">
-                    </div>
-                </div>
+                
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="PublType">Publication Type</label>
-                        <input type="text" class="form-control" id="PublType" name="PublType" value="<?php echo $h['0']->PublType ?>" autocomplete="none">
+                        <select id="PublType" class="form-control" required name="PublType">
+                            <?php foreach ($publications as $publication) { ?>
+                                <option value="<?= $publication ?>" <?= $publication == $h['0']->PublType ? "selected" : "" ?>><?= $publication ?></option>
+                            <?php }
+                            ?>
+                        </select>
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="Authors">AUthors</label>
+                        <label class="label" for="Authors">Authors</label>
                         <input type="text" class="form-control" id="Authors" name="Authors" value="<?php echo $h['0']->Authors ?>" autocomplete="none">
                     </div>
                 </div>
                 <div class="form-group mt-3 ml-3">
                     <label class="label" for="Paper">Paper</label>
                     <input type="text" name="Paper" class="form-control" id="Paper" value="<?php echo $h['0']->Paper ?>" autocomplete="none">
-                </div>
-                <div class="form-group mt-3 ml-3">
-                    <label class="label" for="JournalNO">Journal Number</label>
-                    <input type="text" class="form-control" id="JournalNO" value="<?php echo $h['0']->JournalNO ?>" autocomplete="none" name="JournalNO">
                 </div>
 
                 <div class="form-row row">
@@ -87,7 +82,12 @@
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="Scope">Scope</label>
-                        <input type="text" class="form-control" id="Scope" name="Scope" value="<?php echo $h['0']->Scope ?>" autocomplete="none">
+                        <select id="Scope" class="form-control" required name="Scope">
+                            <?php foreach ($scopes as $scope) { ?>
+                                <option value="<?= $scope ?>" <?= $scope == $h['0']->Scope ? "selected" : "" ?>><?= $scope ?></option>
+                            <?php }
+                            ?>
+                        </select>
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="JMonth">Month of Publishing</label>
@@ -115,6 +115,16 @@
                         <input type="text" class="form-control" id="PublDOI" name="PublDOI" value="<?php echo $h['0']->PublDOI == "NA" ? "" : $h['0']->PublDOI ?>" autocomplete="none">
                     </div>
                 </div>
+                <div class="form-group mt-3 ml-3 ">
+                    <div>
+                        <label class="label">Upload Certifiacte/Document of Journal</label>
+                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
+                    </div>
+                    <div class="output_image_container">
+                        <small>Certifiacte/Document size should be less than 128kb.</small>
+                    </div>
+                </div>
+                
                 <div class="form-group form_button_right ">
                     <button type="submit" class="sbmt_btn btn btn-primary">Submit</button>
                 </div>

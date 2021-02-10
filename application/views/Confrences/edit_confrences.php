@@ -1,4 +1,5 @@
 <?php
+$conferences = array("National","International");
 ?>
 
 <html>
@@ -13,8 +14,8 @@
     <div class="container">
         <nav class="navbar navbar-light bg-light main-bar">
           <div class="container-fluid">
-            <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/login">
-              My Profile
+            <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/all_confrences">
+              Confrence List
             </a>
           </div>
         </nav>
@@ -24,19 +25,15 @@
             </div>
             <form id="confrence_form" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="Id" name="Id" value="<?php echo $h['0']->id ?>">
-                <div class="form-group ">
-                    <div class="output_image_container">
-                        <img id="output_image" src="<?php echo 'profile' ?>" />
-                        <small>Image size should be less than 128kb.</small>
-                    </div>
-                    <div>
-                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(event)">
-                    </div>
-                </div>
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="ConfType">Confrence Type</label>
-                        <input type="text" class="form-control" id="ConfType" name="ConfType" value="<?php echo $h['0']->ConfType ?>" autocomplete="none">
+                        <select id="ConfType" class="form-control" required name="ConfType">
+                            <?php foreach ($conferences as $conference) { ?>
+                                <option value="<?= $conference ?>" <?= $conference == $h['0']->ConfType ? "selected" : "" ?>><?= $conference ?></option>
+                            <?php }
+                            ?>
+                        </select>
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="ConfPlace">Confrrence Place</label>
@@ -62,6 +59,16 @@
                         <input type="text" class="form-control" id="ConfDateTo" name="ConfDateTo" value="<?php echo $h['0']->ConfDateTo == "NA" ? "" : $h['0']->ConfDateTo ?>" autocomplete="none">
                     </div>
                 </div>
+                <div class="form-group mt-3 ml-3 ">
+                    <div>
+                        <label class="label">Upload Certifiacte/Document of Journal</label>
+                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
+                    </div>
+                    <div class="output_image_container">
+                        <small>Certifiacte/Document size should be less than 128kb.</small>
+                    </div>
+                </div>
+                
                 <div class="form-group form_button_right ">
                     <button type="submit" class="sbmt_btn btn btn-primary">Submit</button>
                 </div>

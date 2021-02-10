@@ -461,7 +461,7 @@ class Google_login extends CI_Controller
             $path = "/static/images/";
             $config = [
                 'upload_path' => ".$path",
-                'allowed_types' => 'gif|jpg|png|jpeg',
+                'allowed_types' => 'gif|jpg|png|jpeg|pdf',
                 'max_size' => '10000',
                 'file_name' => $this->get_unique_file_name($_FILES['image_path'])
             ];

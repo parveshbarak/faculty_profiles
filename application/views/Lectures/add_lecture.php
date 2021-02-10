@@ -23,15 +23,6 @@
                 Confrences
             </div>
             <form id="add_confrence_form" method="POST" enctype="multipart/form-data">
-                <div class="form-group ">
-                    <div class="output_image_container">
-                        <img id="output_image" src="<?php echo 'profile' ?>" />
-                        <small>Image size should be less than 128kb.</small>
-                    </div>
-                    <div>
-                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
-                    </div>
-                </div>
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="ConfType">Confrence Type</label>
@@ -61,6 +52,16 @@
                         <input type="text" class="form-control" id="ConfDateTo" name="ConfDateTo" autocomplete="none">
                     </div>
                 </div>
+                <div class="form-group mt-3 ml-3 ">
+                    <div>
+                        <label class="label">Upload Certifiacte/Document of Journal</label>
+                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
+                    </div>
+                    <div class="output_image_container">
+                        <small>Certifiacte/Document size should be less than 128kb.</small>
+                    </div>
+                </div>
+                
                 <div class="form-group form_button_right ">
                     <!-- <input type="submit" class="sbmt_btn btn btn-primary" value="Submit"> -->
                     <button type="submit" class="sbmt_btn btn btn-primary">Submit</button>

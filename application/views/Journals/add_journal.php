@@ -20,35 +20,25 @@
         </nav>
         <div class="generic_form">
             <div class="form-title text-center">
-                Books
+                Journals
             </div>
             <form id="add_book_form" method="POST" enctype="multipart/form-data">
-                <div class="form-group ">
-                    <div class="output_image_container">
-                        <img id="output_image" src="<?php echo 'profile' ?>" />
-                        <small>Image size should be less than 128kb.</small>
-                    </div>
-                    <div>
-                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
-                    </div>
-                </div>
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="PublType">Publication Type </label>
-                        <input type="text" class="form-control" id="PublType" name="PublType" autocomplete="none">
+                        <select id="PublType" class="form-control" required name="PublType">
+                            <option value="SCOPUS" >National</option>
+                            <option value="UGC CARE" >International</option>
+                        </select>
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="Authors">Authors</label>
                         <input type="text" name="Authors" class="form-control" id="Authors" autocomplete="none">
                     </div>
                 </div>
-                <div class="form-group  col-md-6 mt-3 ml-3">
+                <div class="form-group ml-3">
                     <label class="label" for="Paper">Paper</label>
                     <input type="text" name="Paper" class="form-control" id="Paper" autocomplete="none">
-                </div>
-                <div class="form-group  col-md-6 mt-3 ml-3">
-                    <label class="label" for="JournalNO">Journal Number</label>
-                    <input type="text" class="form-control" id="JournalNO"autocomplete="none" name="JournalNO">
                 </div>
 
                 <div class="form-row row">
@@ -86,20 +76,27 @@
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="Scope">Scope</label>
-                        <input type="text" class="form-control" id="Scope" name="Scope" autocomplete="none">
+                        <select id="Scope" class="form-control" required name="Scope">
+                            <option value="SCOPUS" >SCOPUS</option>
+                            <option value="UGC CARE" >UGC CARE</option>
+                            <option value="SCI" >SCI</option>
+                            <option value="Others" >Others</option>
+                        </select>
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="JMonth">Month of Publication</label>
                         <input type="text" class="form-control" id="JMonth" name="JMonth" autocomplete="none">
                     </div>
                 </div>
-                <div class="form-group mt-3 ml-3">
-                    <label class="label" for="JYear">Year of Publication</label>
-                    <input type="text" name="JYear" class="form-control" id="JYear" autocomplete="none">
-                </div>
-                <div class="form-group mt-3 ml-3">
-                    <label class="label" for="PublVol">Publication Volume</label>
-                    <input type="text" class="form-control" id="PublVol"autocomplete="none" name="PublVol">
+                <div class="row">
+                    <div class="form-group col-md-6 mt-3 ml-3">
+                        <label class="label" for="JYear">Year of Publication</label>
+                        <input type="text" name="JYear" class="form-control" id="JYear" autocomplete="none">
+                    </div>
+                    <div class="form-group col-md-6 mt-3 ml-3">
+                        <label class="label" for="PublVol">Publication Volume</label>
+                        <input type="text" class="form-control" id="PublVol"autocomplete="none" name="PublVol">
+                    </div>
                 </div>
 
                 <div class="form-row row">
@@ -111,6 +108,17 @@
                         <label class="label" for="PublDOI">Publication DOI</label>
                         <input type="text" class="form-control" id="PublDOI" name="PublDOI" autocomplete="none">
                     </div>
+                </div>
+                <div class="form-group mt-3 ml-3 ">
+                    <div>
+                        <label class="label">Upload Certifiacte/Document of Journal</label>
+                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
+                    </div>
+                    <div class="output_image_container">
+                        <small>Certifiacte/Document size should be less than 128kb.</small>
+                    </div>
+                </div>
+                
                 <div class="form-group form_button_right ">
                     <button type="submit" class="sbmt_btn btn btn-primary">Submit</button>
                 </div>
