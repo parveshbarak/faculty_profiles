@@ -8,11 +8,14 @@ class Google_login extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('form_validation');
+        $this->load->library('upload');
+        $this->load->helper('url', 'text', 'form', 'file', 'html');
         $this->load->model('google_login_model');
     }
 
     // Login Function
-    
+
     function login()
     {
         include_once APPPATH . "libraries/vendor/autoload.php";
@@ -64,14 +67,14 @@ class Google_login extends CI_Controller
                 } else {
                     //Case-1 : insert data    
                     //We need to Make a code using His Email Id
-                    $code = 'GKV/075';
+                    $code = 'GKV/062';
 
                     $user_data = array(
                         'name' => $data['given_name'],
                         'email' => $data['email'],
                         'password' => $data['id'],
                         'code' => $code
-                    );                 
+                    );
                     $this->google_login_model->Insert_user_data($user_data, $data['id']);
                     $this->session->set_userdata('user_data', $user_data);
 
@@ -104,11 +107,11 @@ class Google_login extends CI_Controller
             $this->load->view('profile', $query2);
         }
     }
-    
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Confrences
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     function all_confrences()
     {
         if (!$this->session->userdata('access_token')) {
@@ -174,11 +177,11 @@ class Google_login extends CI_Controller
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
-                $id = $form_data['Id']; 
+                $form_data = $this->input->post();
+                $id = $form_data['Id'];
                 $this->load->model('Confrences');
-                $result = $this->Confrences->update_confrence($form_data,$code,$id);
-                if($result) {
+                $result = $this->Confrences->update_confrence($form_data, $code, $id);
+                if ($result) {
                     echo "Confrence successfully updated";
                 } else {
                     echo "Something Went Wrong! ";
@@ -207,15 +210,15 @@ class Google_login extends CI_Controller
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
+                $form_data = $this->input->post();
                 $image_path = $this->upload_file_and_get_path();
                 $this->load->model('Confrences');
                 $count = $this->Confrences->select($code);
                 $count = sizeof($count);
                 $serial_no = $count + 1;
                 $this->load->model('Confrences');
-                $result = $this->Confrences->add_confrence($form_data,$code,$serial_no,$image_path);
-                if($result) {
+                $result = $this->Confrences->add_confrence($form_data, $code, $serial_no, $image_path);
+                if ($result) {
                     echo "Confrence successfully Added";
                 } else {
                     echo "Something Went Wrong! ";
@@ -223,11 +226,11 @@ class Google_login extends CI_Controller
             }
         }
     }
-    
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //BOOKS
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     function all_books()
     {
         if (!$this->session->userdata('access_token')) {
@@ -290,11 +293,11 @@ class Google_login extends CI_Controller
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
-                $id = $form_data['Id']; 
+                $form_data = $this->input->post();
+                $id = $form_data['Id'];
                 $this->load->model('Books');
-                $result = $this->Books->update_book($form_data,$code,$id);
-                if($result) {
+                $result = $this->Books->update_book($form_data, $code, $id);
+                if ($result) {
                     echo "Book successfully updated";
                 } else {
                     echo "Something Went Wrong! ";
@@ -320,15 +323,17 @@ class Google_login extends CI_Controller
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
+                $form_data = $this->input->post();
                 $image_path = $this->upload_file_and_get_path();
+                echo $image_path;
+                die;
                 $this->load->model('Books');
                 $count = $this->Books->select($code);
                 $count = sizeof($count);
                 $serial_no = $count + 1;
                 $this->load->model('Books');
-                $result = $this->Books->add_book($form_data,$code,$serial_no,$image_path);
-                if($result) {
+                $result = $this->Books->add_book($form_data, $code, $serial_no, $image_path);
+                if ($result) {
                     echo "Book successfully Added";
                 } else {
                     echo "Something Went Wrong! ";
@@ -336,11 +341,11 @@ class Google_login extends CI_Controller
             }
         }
     }
-    
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Journals
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     function all_journals()
     {
         if (!$this->session->userdata('access_token')) {
@@ -404,11 +409,11 @@ class Google_login extends CI_Controller
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
-                $id = $form_data['Id']; 
+                $form_data = $this->input->post();
+                $id = $form_data['Id'];
                 $this->load->model('Journals');
-                $result = $this->Journals->update_journal($form_data,$code,$id);
-                if($result) {
+                $result = $this->Journals->update_journal($form_data, $code, $id);
+                if ($result) {
                     echo "Journal successfully updated";
                 } else {
                     echo "Something Went Wrong! ";
@@ -435,15 +440,17 @@ class Google_login extends CI_Controller
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
+                $form_data = $this->input->post();
                 $image_path = $this->upload_file_and_get_path();
+                echo $image_path;
+                die;
                 $this->load->model('Journals');
                 $count = $this->Journals->select($code);
                 $count = sizeof($count);
                 $serial_no = $count + 1;
                 $this->load->model('Journals');
-                $result = $this->Journals->add_journal($form_data,$code,$serial_no,$image_path);
-                if($result) {
+                $result = $this->Journals->add_journal($form_data, $code, $serial_no, $image_path);
+                if ($result) {
                     echo "Journal successfully Added";
                 } else {
                     echo "Something Went Wrong! ";
@@ -451,43 +458,37 @@ class Google_login extends CI_Controller
             }
         }
     }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //UPLOAD FUNCTION
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-    private function upload_file_and_get_path(): string {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private function upload_file_and_get_path(): string
+    {
+        $this->load->library('upload');
         $image_path = "";
-        if ($_FILES) {
-            $path = "/static/images/";
-            $config = [
-                'upload_path' => ".$path",
-                'allowed_types' => 'gif|jpg|png|jpeg|pdf',
-                'max_size' => '10000',
-                'file_name' => $this->get_unique_file_name($_FILES['image_path'])
-            ];
-            $CI = & get_instance();
-            $CI->load->library('upload', $config);
-            if ($CI->upload->do_upload('image_path')) {
-                $info = $CI->upload->data();
-                $image_path = base_url($path . $info['raw_name'] . $info['file_ext']);
-                // delete the images present in table or else with every new upload unwanted files will keep on increasing
-            } else {
-                echo 'Image UPload Failed';
-                return "";
-            }
+        $config['upload_path'] = './static/images/';
+        $config['allowed_types'] = 'jpg|jpeg|png|gif';
+        $config['encrypt_name'] = TRUE;
+        $this->upload->initialize($config);
+        if ($this->upload->do_upload('image_path')) {
+            $info = $this->upload->data();
+            $image_path = $info['file_name'];
+            // delete the images present in table or else with every new upload unwanted files will keep on increasing
+        } else {
+            echo $this->upload->display_errors();
+            return "";
         }
         return $image_path;
     }
-    
- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //LOGOUT
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     function logout()
     {
         $this->session->unset_userdata('access_token');
         $this->session->unset_userdata('user_data');
         redirect('index.php/google_login/login');
     }
-
 }

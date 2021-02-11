@@ -12,11 +12,11 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-light bg-light main-bar">
-          <div class="container-fluid">
-            <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/login">
-              My Profile
-            </a>
-          </div>
+            <div class="container-fluid">
+                <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/login">
+                    My Profile
+                </a>
+            </div>
         </nav>
         <div class="generic_form">
             <div class="form-title text-center">
@@ -43,7 +43,7 @@
                 </div>
                 <div class="form-group  col-md-6 mt-3 ml-3">
                     <label class="label" for="BookPublication">Book Publication</label>
-                    <input type="text" class="form-control" id="BookPublication"autocomplete="none" name="BookPublication">
+                    <input type="text" class="form-control" id="BookPublication" autocomplete="none" name="BookPublication">
                 </div>
 
                 <div class="form-row row">
@@ -87,7 +87,7 @@
                         <small>Certifiacte/Document size should be less than 128kb.</small>
                     </div>
                 </div>
-                
+
                 <div class="form-group form_button_right ">
                     <!-- <input type="submit" class="sbmt_btn btn btn-primary" value="Submit"> -->
                     <button type="submit" class="sbmt_btn btn btn-primary">Submit</button>
@@ -96,31 +96,34 @@
         </div>
     </div>
 
-<!--------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------->
     <!-- JS PART -->
-<!--------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------->
 
     <script type="text/javascript">
         $("button").click(function() {
-            var data = $('#add_book_form').serialize();
+            var aProof = new FormData($("#add_book_form")[0]);
             $.ajax({
                 url: 'http://localhost/faculty_profiles/index.php/google_login/add_book',
                 type: 'POST',
-                data: data,
+                data: aProof,
+                contentType: false,
+                processData: false,
                 error: function() {
                     alert('Something is wrong');
                 },
                 success: function(data) {
-                    alert(data);  //data return after past from controller
+                    alert(data); //data return after past from controller
                 }
             });
             return false;
         });
-        function preview_image(input){
+
+        function preview_image(input) {
             var file = $("input[type=file]").get(0).files[0];
-            if(file){
+            if (file) {
                 var reader = new FileReader();
-                reader.onload = function(){
+                reader.onload = function() {
                     $("#output_image").attr("src", reader.result);
                 }
                 reader.readAsDataURL(file);
@@ -129,4 +132,5 @@
     </script>
 
 </body>
+
 </html>
