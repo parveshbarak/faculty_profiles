@@ -12,55 +12,58 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-light bg-light main-bar">
-          <div class="container-fluid">
-            <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/all_lectures">
-              Lecture List
-            </a>
-          </div>
+            <div class="container-fluid">
+                <a class="btn btn-outline-success me-2 navbar-brand" href="<?php echo base_url(); ?>index.php/google_login/login">
+                    My Profile
+                </a>
+            </div>
         </nav>
         <div class="generic_form">
             <div class="form-title text-center">
-                Lectures
+                Awards
             </div>
-            <form id="lecture_form" method="POST" enctype="multipart/form-data">
-                <input type="hidden" id="Id" name="Id" value="<?php echo $h['0']->id ?>">
+            <form id="add_award_form" method="POST" enctype="multipart/form-data">
                 <div class="form-group mt-3 ml-3">
-                    <label class="label" for="Lecture">Lecture</label>
-                    <input type="text" class="form-control" id="Lecture" name="Lecture" value="<?php echo $h['0']->Lecture ?>" autocomplete="none">
+                    <label class="label" for="AwardName">Award Name</label>
+                    <input type="text" class="form-control" id="AwardName" name="AwardName" autocomplete="none">
                 </div>
-                <div class="form-row row">    
+                <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="Place"> Place</label>
-                        <input type="text" class="form-control" id="Place" name="Place" value="<?php echo $h['0']->Place ?>" autocomplete="none">
+                        <label class="label" for="AwardAgency">Award Agency</label>
+                        <input type="text" class="form-control" id="AwardAgency" name="AwardAgency" autocomplete="none">
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="LectureDate">Lecture Date</label>
-                        <input type="text" name="LectureDate" class="form-control" id="LectureDate" value="<?php echo $h['0']->LectureDate ?>" autocomplete="none">
+                        <label class="label" for="AwardYear">Year of reciving Award</label>
+                        <input type="text" name="AwardYear" class="form-control" id="AwardYear" autocomplete="none">
                     </div>
                 </div>
                 <div class="form-group mt-3 ml-3 ">
                     <div>
                         <label class="label">Upload Certifiacte/Document of Journal</label>
-                        <input type="file" id="image_path" name="image_path" class="image_path" value="<?php echo $h['0']->image_path ?>">
+                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
+                    </div>
+                    <div class="output_image_container">
+                        <small>Certifiacte/Document size should be less than 128kb.</small>
                     </div>
                 </div>
-                
+
                 <div class="form-group form_button_right ">
+                    <!-- <input type="submit" class="sbmt_btn btn btn-primary" value="Submit"> -->
                     <button type="submit" class="sbmt_btn btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
     </div>
 
-<!--------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------->
     <!-- JS PART -->
-<!--------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------------------------------------->
 
     <script type="text/javascript">
         $("button").click(function() {
-            var aProof = new FormData($("#lecture_form")[0]);
+            var aProof = new FormData($("#add_award_form")[0]);
             $.ajax({
-                url: 'http://localhost/faculty_profiles/index.php/google_login/update_lecture',
+                url: 'http://localhost/faculty_profiles/index.php/google_login/add_award',
                 type: 'POST',
                 data: aProof,
                 contentType: false,
@@ -69,7 +72,7 @@
                     alert('Something is wrong');
                 },
                 success: function(data) {
-                    alert(data);  //data return after past from controller
+                    alert(data); //data return after past from controller
                 }
             });
             return false;
@@ -77,4 +80,5 @@
     </script>
 
 </body>
+
 </html>

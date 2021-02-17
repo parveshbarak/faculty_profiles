@@ -2,8 +2,8 @@
 
 class Google_login_model extends CI_Model {
 
-    function Is_already_register($id) {
-        $this->db->where('password', $id);
+    function Is_already_register($email) {
+        $this->db->where('email', $email);
         $query = $this->db->get('users');
         if ($query->num_rows() > 0) {
             return true;
@@ -12,12 +12,12 @@ class Google_login_model extends CI_Model {
         }
     }
 
-    function Update_user_data($data, $id) {
-        $this->update_users($data['users'], $id);
+    function Update_user_data($data, $email) {
+        $this->update_users($data['users'], $email);
     }
     
-    private function update_users($data, $id) {
-        $this->db->where('password', $id);
+    private function update_users($data, $email) {
+        $this->db->where('email', $email);
         $this->db->update('users', $data);
     }
     

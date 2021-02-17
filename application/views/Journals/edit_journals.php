@@ -24,7 +24,7 @@ $publications = array("National","International");
             <div class="form-title text-center">
                 Journals
             </div>
-            <form id="book_form" method="POST" enctype="multipart/form-data">
+            <form id="journal_form" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="Id" name="Id" value="<?php echo $h['0']->id ?>">
                 
                 <div class="form-row row">
@@ -118,10 +118,7 @@ $publications = array("National","International");
                 <div class="form-group mt-3 ml-3 ">
                     <div>
                         <label class="label">Upload Certifiacte/Document of Journal</label>
-                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
-                    </div>
-                    <div class="output_image_container">
-                        <small>Certifiacte/Document size should be less than 128kb.</small>
+                        <input type="file" id="image_path" name="image_path" class="image_path" value="<?php echo $h['0']->image_path ?>">
                     </div>
                 </div>
                 
@@ -138,11 +135,13 @@ $publications = array("National","International");
 
     <script type="text/javascript">
         $("button").click(function() {
-            var data = $('#book_form').serialize();
+            var aProof = new FormData($("#journal_form")[0]);
             $.ajax({
                 url: 'http://localhost/faculty_profiles/index.php/google_login/update_journal',
                 type: 'POST',
-                data: data,
+                data: aProof,
+                contentType: false,
+                processData: false,
                 error: function() {
                     alert('Something is wrong');
                 },

@@ -22,7 +22,7 @@
             <div class="form-title text-center">
                 Journals
             </div>
-            <form id="add_book_form" method="POST" enctype="multipart/form-data">
+            <form id="add_journal_form" method="POST" enctype="multipart/form-data">
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
                         <label class="label" for="PublType">Publication Type </label>
@@ -132,11 +132,13 @@
 
     <script type="text/javascript">
         $("button").click(function() {
-            var data = $('#add_book_form').serialize();
+            var aProof = new FormData($("#add_journal_form")[0]);
             $.ajax({
-                url: 'http://localhost/faculty_profiles/index.php/google_login/add_book',
+                url: 'http://localhost/faculty_profiles/index.php/google_login/add_journal',
                 type: 'POST',
-                data: data,
+                data: aProof,
+                contentType: false,
+                processData: false,
                 error: function() {
                     alert('Something is wrong');
                 },
@@ -146,16 +148,6 @@
             });
             return false;
         });
-        function preview_image(input){
-            var file = $("input[type=file]").get(0).files[0];
-            if(file){
-                var reader = new FileReader();
-                reader.onload = function(){
-                    $("#output_image").attr("src", reader.result);
-                }
-                reader.readAsDataURL(file);
-            }
-        }
     </script>
 
 </body>

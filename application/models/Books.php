@@ -23,8 +23,9 @@ class Books extends CI_Model
       return $result;
    }
 
-   public function update_book($data, $code, $id)
+   public function update_book($data, $code, $id, $image_path)
    {
+       $data['image_path'] = $image_path;
        $query = $this->db->WHERE('user_id',$code);
        $query = $this->db->WHERE('id',$id);
        $query = $this->db->UPDATE('books', $data);

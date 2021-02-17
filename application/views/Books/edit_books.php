@@ -79,13 +79,11 @@
                         <input type="text" class="form-control" id="APICount" name="APICount" value="<?php echo $h['0']->APICount ?>" autocomplete="none">
                     </div>
                 </div>
+                
                 <div class="form-group mt-3 ml-3 ">
                     <div>
                         <label class="label">Upload Certifiacte/Document of Journal</label>
-                        <input type="file" id="image_path" name="image_path" class="image_path" onchange="preview_image(this)">
-                    </div>
-                    <div class="output_image_container">
-                        <small>Certifiacte/Document size should be less than 128kb.</small>
+                        <input type="file" id="image_path" name="image_path" class="image_path" value="<?php echo $h['0']->image_path ?>">
                     </div>
                 </div>
                 
@@ -102,11 +100,13 @@
 
     <script type="text/javascript">
         $("button").click(function() {
-            var data = $('#book_form').serialize();
+            var aProof = new FormData($("#book_form")[0]);
             $.ajax({
                 url: 'http://localhost/faculty_profiles/index.php/google_login/update_book',
                 type: 'POST',
-                data: data,
+                data: aProof,
+                contentType: false,
+                processData: false,
                 error: function() {
                     alert('Something is wrong');
                 },

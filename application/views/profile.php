@@ -79,8 +79,8 @@
             <section>
                 
                 <!-- ========================================================================== -->
-
-                <?php if ($h[1]) { ?>
+                
+                <?php if ($h[1]) {                                //print_r($h); die; ?>
                     <h1>
                         Journals
                         <span class = "right-button">
@@ -146,7 +146,7 @@
                         <p>
                             <strong>Lecture :</strong><?php echo $row->Lecture ?> <br>
                             <strong>Place :</strong><?php echo $row->Place ?> <br>
-                            <strong>Date :</strong> <?php echo $row->LectureDtae ?>
+                            <strong>Date :</strong> <?php echo $row->LectureDate ?>
                         </p>
                     <?php }} else { ?>
                     <!-- nothing to show -->

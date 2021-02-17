@@ -1,5 +1,5 @@
 <?php
-class Confrences extends CI_Model
+class Awards extends CI_Model
 {
    function __construct()
    {
@@ -9,29 +9,26 @@ class Confrences extends CI_Model
    
    public function select($code)
    {
-      $query = $this->db->query("SELECT * FROM confrences WHERE user_id='$code'");
+      $query = $this->db->query("SELECT * FROM awards WHERE user_id='$code'");
       $result = $query->result();
 
       return $result;
    }
 
-   public function get_confrence($code, $id)
+   public function get_award($code, $id)
    {
       //data is retrive from this query 
-      $query = $this->db->query("SELECT * FROM confrences WHERE user_id='$code' AND id = '$id'");
+      $query = $this->db->query("SELECT * FROM awards WHERE user_id='$code' AND id = '$id'");
       $result = $query->result();
-      if($result)
-        return $result;
-      else
-          return NULL;
+      return $result;
    }
 
-   public function update_confrence($data, $code, $id, $image_path)
+   public function update_award($data, $code, $id, $image_path)
    {
        $data['image_path'] = $image_path;
        $query = $this->db->WHERE('user_id',$code);
        $query = $this->db->WHERE('id',$id);
-       $query = $this->db->UPDATE('confrences', $data);
+       $query = $this->db->UPDATE('awards', $data);
        if($query) {
            return true;
        } else {
@@ -39,11 +36,11 @@ class Confrences extends CI_Model
        }
    }
 
-   public function add_confrence($data, $code, $serial_no,$image_path)
+   public function add_award($data, $code, $serial_no,$image_path)
    {
        $query = $this->db->WHERE('user_id',$code);
        $data['user_id'] = $code; $data['serial_no'] = $serial_no; $data['image_path'] = $image_path;
-       $query = $this->db->INSERT('confrences', $data);
+       $query = $this->db->INSERT('awards', $data);
        if($query) {
            return true;
        } else {

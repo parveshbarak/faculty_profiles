@@ -2,6 +2,13 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+$redirect_page = 'http://localhost/faculty_profiles/index.php/google_login/login/1';
+$journal_redirect = 'http://localhost/faculty_profiles/index.php/google_login/all_journals';
+$conference_redirect = 'http://localhost/faculty_profiles/index.php/google_login/all_conferences';
+$book_redirect = 'http://localhost/faculty_profiles/index.php/google_login/all_books';
+$chapter_redirect = 'http://localhost/faculty_profiles/index.php/google_login/all_chapters';
+$lecture_redirect = 'http://localhost/faculty_profiles/index.php/google_login/all_lectures';
+
 class Google_login extends CI_Controller
 {
 
@@ -16,8 +23,9 @@ class Google_login extends CI_Controller
 
     // Login Function
 
-    function login()
+    function login($id = NULL)
     {
+        
         include_once APPPATH . "libraries/vendor/autoload.php";
 
         $google_client = new Google_Client();
@@ -26,7 +34,7 @@ class Google_login extends CI_Controller
 
         $google_client->setClientSecret('oIvz-ebQoZi71e2owuTwWnr0'); //Define your Client Secret Key
 
-        $google_client->setRedirectUri('http://localhost/faculty_profiles/index.php/google_login/login'); //Define your Redirect Uri
+        $google_client->setRedirectUri($GLOBALS['redirect_page']); //Define your Redirect Uri
 
         $google_client->addScope('email');
 
@@ -44,7 +52,7 @@ class Google_login extends CI_Controller
 
                 $data = $google_service->userinfo->get();
 
-                if ($this->google_login_model->Is_already_register($data['id'])) {
+                if ($this->google_login_model->Is_already_register($data['email'])) {
                     //update data
                     $users = array(
                         'name' => $data['given_name'],
@@ -62,29 +70,33 @@ class Google_login extends CI_Controller
                         'code' => $code
                     );
 
-                    $this->google_login_model->Update_user_data($user_data, $data['id']);
+                    $this->google_login_model->Update_user_data($user_data, $data['email']);
                     $this->session->set_userdata('user_data', $user_data);
                 } else {
                     //Case-1 : insert data    
                     //We need to Make a code using His Email Id
-                    $code = 'GKV/062';
-
-                    $user_data = array(
-                        'name' => $data['given_name'],
-                        'email' => $data['email'],
-                        'password' => $data['id'],
-                        'code' => $code
-                    );
-                    $this->google_login_model->Insert_user_data($user_data, $data['id']);
-                    $this->session->set_userdata('user_data', $user_data);
+//                    $code = 'GKV/062';
+//
+//                    $user_data = array(
+//                        'name' => $data['given_name'],
+//                        'email' => $data['email'],
+//                        'password' => $data['id'],
+//                        'code' => $code
+//                    );
+//                    $this->google_login_model->Insert_user_data($user_data, $data['id']);
+//                    $this->session->set_userdata('user_data', $user_data);
 
 
                     // Case-2 : Do not insert data 
                     // show a message that you are  not a autheniticated user!
                     $this->session->unset_userdata('access_token');
                     $this->session->unset_userdata('user_data');
-                    redirect('index.php');
-                    echo 'You are not allowed to login!!!';  // A alert message here!!
+                    echo "<script>
+                        alert('Please Make sure to USE GKV email! ');
+                        window.location.href='http://localhost/faculty_profiles/index.php/google_login/login/1';
+                        </script>";
+                    //redirect($GLOBALS['redirect_page']);
+                    //echo 'You are not allowed to login!!!';  // A alert message here!!
 
                 }
             }
@@ -92,7 +104,17 @@ class Google_login extends CI_Controller
         // Duumy Profile
         //In Future Replace it with Home Page of Faculties Data
         $this->load->model('Profile');
-        $query1['h'] = $this->Profile->dummy();
+        $url = $_SERVER['REQUEST_URI'];
+        $path = explode("/", $url); 
+        $last = end($path);
+        $normal_code = $this->Profile->get_code_from_serial_no($id);
+        if($normal_code)
+        {
+            $query1['h'] = $this->Profile->profile($normal_code[0]->Code);
+        } else {
+            $query1['h'] = $this->Profile->profile('GKV/054');
+        }
+
 
         $login_button = '';
         if (!$this->session->userdata('access_token')) {
@@ -117,7 +139,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
@@ -127,21 +149,23 @@ class Google_login extends CI_Controller
         }
     }
 
-    function edit_confrences()
+    function edit_confrences($conf_id=NULL)
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
-            $uri = $_SERVER['REQUEST_URI'];
-            $uri_array = explode('/', $uri);
-            $conf_id = end($uri_array);
             $this->load->model('Confrences');
-            $data['h'] = $this->Confrences->get_confrence($code, $conf_id);
-            $this->load->view('Confrences/edit_confrences', $data);
+            if($this->Confrences->get_confrence($code, $conf_id)) {
+                $data['h'] = $this->Confrences->get_confrence($code, $conf_id);
+                $this->load->view('Confrences/edit_confrences', $data);
+            } else {
+                echo 'No such Confrence';  // A alert message here!!
+                redirect($GLOBALS['confrence_redirect']);
+            }
         }
     }
 
@@ -150,7 +174,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->view('Confrences/add_confrence');
@@ -162,7 +186,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
@@ -179,8 +203,9 @@ class Google_login extends CI_Controller
                 $code = $this->session->userdata['user_data']['code']['Code'];
                 $form_data = $this->input->post();
                 $id = $form_data['Id'];
+                $image_path = $this->upload_file_and_get_path();
                 $this->load->model('Confrences');
-                $result = $this->Confrences->update_confrence($form_data, $code, $id);
+                $result = $this->Confrences->update_confrence($form_data, $code, $id, $image_path);
                 if ($result) {
                     echo "Confrence successfully updated";
                 } else {
@@ -195,7 +220,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
@@ -236,7 +261,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
@@ -246,21 +271,23 @@ class Google_login extends CI_Controller
         }
     }
 
-    function edit_books()
+    function edit_books($book_id=NULL)
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
-            $uri = $_SERVER['REQUEST_URI'];
-            $uri_array = explode('/', $uri);
-            $book_id = end($uri_array);
             $this->load->model('Books');
-            $data['h'] = $this->Books->get_book($code, $book_id);
-            $this->load->view('Books/edit_books', $data);
+            if($this->Books->get_book($code, $book_id)) {
+                $data['h'] = $this->Books->get_book($code, $book_id);
+                $this->load->view('Books/edit_books', $data);
+            } else {
+                echo 'No such Book';  // A alert message here!!
+                redirect($GLOBALS['book_redirect']);
+            }
         }
     }
 
@@ -269,7 +296,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->view('Books/add_book');
@@ -281,7 +308,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
@@ -295,8 +322,9 @@ class Google_login extends CI_Controller
                 $code = $this->session->userdata['user_data']['code']['Code'];
                 $form_data = $this->input->post();
                 $id = $form_data['Id'];
+                $image_path = $this->upload_file_and_get_path();
                 $this->load->model('Books');
-                $result = $this->Books->update_book($form_data, $code, $id);
+                $result = $this->Books->update_book($form_data, $code, $id, $image_path);
                 if ($result) {
                     echo "Book successfully updated";
                 } else {
@@ -311,7 +339,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
@@ -325,8 +353,6 @@ class Google_login extends CI_Controller
                 $code = $this->session->userdata['user_data']['code']['Code'];
                 $form_data = $this->input->post();
                 $image_path = $this->upload_file_and_get_path();
-                echo $image_path;
-                die;
                 $this->load->model('Books');
                 $count = $this->Books->select($code);
                 $count = sizeof($count);
@@ -351,7 +377,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
@@ -361,21 +387,23 @@ class Google_login extends CI_Controller
         }
     }
 
-    function edit_journals()
+    function edit_journals($journal_id=NULL)
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
-            $uri = $_SERVER['REQUEST_URI'];
-            $uri_array = explode('/', $uri);
-            $journal_id = end($uri_array);
             $this->load->model('Journals');
-            $data['h'] = $this->Journals->get_journal($code, $journal_id);
-            $this->load->view('Journals/edit_journals', $data);
+            if($this->Journals->get_journal($code, $journal_id)) {
+                $data['h'] = $this->Journals->get_journal($code, $journal_id);
+                $this->load->view('Journals/edit_journals', $data);
+            } else {
+                echo 'No such Journal';  // A alert message here!!
+                redirect($GLOBALS['journal_redirect']);
+            }
         }
     }
 
@@ -384,7 +412,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->view('Journals/add_journal');
@@ -396,7 +424,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
@@ -411,8 +439,9 @@ class Google_login extends CI_Controller
                 $code = $this->session->userdata['user_data']['code']['Code'];
                 $form_data = $this->input->post();
                 $id = $form_data['Id'];
+                $image_path = $this->upload_file_and_get_path();
                 $this->load->model('Journals');
-                $result = $this->Journals->update_journal($form_data, $code, $id);
+                $result = $this->Journals->update_journal($form_data, $code, $id, $image_path);
                 if ($result) {
                     echo "Journal successfully updated";
                 } else {
@@ -427,7 +456,7 @@ class Google_login extends CI_Controller
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
@@ -442,8 +471,6 @@ class Google_login extends CI_Controller
                 $code = $this->session->userdata['user_data']['code']['Code'];
                 $form_data = $this->input->post();
                 $image_path = $this->upload_file_and_get_path();
-                echo $image_path;
-                die;
                 $this->load->model('Journals');
                 $count = $this->Journals->select($code);
                 $count = sizeof($count);
@@ -458,6 +485,358 @@ class Google_login extends CI_Controller
             }
         }
     }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //AWARDS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function all_awards()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Awards');
+            $data['h'] = $this->Awards->select($code);
+            $this->load->view('Awards/all_awards', $data);
+        }
+    }
+
+    function edit_awards($award_id=NULL)
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Awards');
+            if($this->Awards->get_award($code, $award_id)) {
+                $data['h'] = $this->Awards->get_award($code, $award_id);
+                $this->load->view('Awards/edit_awards', $data);
+            } else {
+                echo 'No such Award';  // A alert message here!!
+                redirect($GLOBALS['award_redirect']);
+            }
+        }
+    }
+
+    function new_award()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->view('Awards/add_award');
+        }
+    }
+
+    function update_award()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->helper(array('form', 'url'));
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('AwardName', 'Award Name', 'required');
+            $this->form_validation->set_rules('AwardAgency', 'Award Agency', 'required');
+            $this->form_validation->set_rules('AwardYear', 'Award Year', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo validation_errors();
+            } else {
+                $code = $this->session->userdata['user_data']['code']['Code'];
+                $form_data = $this->input->post();
+                $id = $form_data['Id'];
+                $image_path = $this->upload_file_and_get_path();
+                $this->load->model('Awards');
+                $result = $this->Awards->update_award($form_data, $code, $id, $image_path);
+                if ($result) {
+                    echo "Award successfully updated";
+                } else {
+                    echo "Something Went Wrong! ";
+                }
+            }
+        }
+    }
+
+    function add_award()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->helper(array('form', 'url'));
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('AwardName', 'Award Name', 'required');
+            $this->form_validation->set_rules('AwardAgency', 'Award Agency', 'required');
+            $this->form_validation->set_rules('AwardYear', 'Award Year', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo validation_errors();
+            } else {
+                $code = $this->session->userdata['user_data']['code']['Code'];
+                $form_data = $this->input->post();
+                $image_path = $this->upload_file_and_get_path();
+                $this->load->model('Awards');
+                $count = $this->Awards->select($code);
+                $count = sizeof($count);
+                $serial_no = $count + 1;
+                $this->load->model('Awards');
+                $result = $this->Awards->add_award($form_data, $code, $serial_no, $image_path);
+                if ($result) {
+                    echo "Award successfully Added";
+                } else {
+                    echo "Something Went Wrong! ";
+                }
+            }
+        }
+    }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //CHAPTERS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function all_chapters()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Chapters');
+            $data['h'] = $this->Chapters->select($code);
+            $this->load->view('Chapters/all_chapters', $data);
+        }
+    }
+
+    function edit_chapters($chapter_id=NULL)
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Chapters');
+            if($this->Chapters->get_chapter($code, $chapter_id)) {
+                $data['h'] = $this->Chapters->get_chapter($code, $chapter_id);
+                $this->load->view('Chapters/edit_chapters', $data);
+            } else {
+                echo 'No such Chapter';  // A alert message here!!
+                redirect($GLOBALS['chapter_redirect']);
+            }
+        }
+    }
+
+    function new_chapter()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->view('Chapters/add_chapter');
+        }
+    }
+
+    function update_chapter()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->helper(array('form', 'url'));
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('ChapterName', 'Chapter Name', 'required');
+            $this->form_validation->set_rules('ChapterBook', 'Chapter Book', 'required');
+            $this->form_validation->set_rules('ChapterPublisher', 'Chapter Publisher', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo validation_errors();
+            } else {
+                $code = $this->session->userdata['user_data']['code']['Code'];
+                $form_data = $this->input->post();
+                $id = $form_data['Id'];
+                $image_path = $this->upload_file_and_get_path();
+                $this->load->model('Chapters');
+                $result = $this->Chapters->update_chapter($form_data, $code, $id, $image_path);
+                if ($result) {
+                    echo "Chapter successfully updated";
+                } else {
+                    echo "Something Went Wrong! ";
+                }
+            }
+        }
+    }
+
+    function add_chapter()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->helper(array('form', 'url'));
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('ChapterName', 'Chapter Name', 'required');
+            $this->form_validation->set_rules('ChapterBook', 'Chapter Book', 'required');
+            $this->form_validation->set_rules('ChapterPublisher', 'Chapter Publisher', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo validation_errors();
+            } else {
+                $code = $this->session->userdata['user_data']['code']['Code'];
+                $form_data = $this->input->post();
+                $image_path = $this->upload_file_and_get_path();
+                $this->load->model('Chapters');
+                $count = $this->Chapters->select($code);
+                $count = sizeof($count);
+                $serial_no = $count + 1;
+                $this->load->model('Chapters');
+                $result = $this->Chapters->add_chapter($form_data, $code, $serial_no, $image_path);
+                if ($result) {
+                    echo "Chapter successfully Added";
+                } else {
+                    echo "Something Went Wrong! ";
+                }
+            }
+        }
+    }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //LECTURES
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function all_lectures()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Lectures');
+            $data['h'] = $this->Lectures->select($code);
+            $this->load->view('Lectures/all_lectures', $data);
+        }
+    }
+
+    function edit_lectures($lecture_id=NULL)
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $code = $this->session->userdata['user_data']['code']['Code'];
+            $this->load->model('Lectures');
+            if($this->Lectures->get_lecture($code, $lecture_id)) {
+                $data['h'] = $this->Lectures->get_lecture($code, $lecture_id);
+                $this->load->view('Lectures/edit_lectures', $data);
+            } else {
+                echo 'No such Lecture';  // A alert message here!!
+                redirect($GLOBALS['lecture_redirect']);
+            }
+        }
+    }
+
+    function new_lecture()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->view('Lectures/add_lecture');
+        }
+    }
+
+    function update_lecture()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->helper(array('form', 'url'));
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('Lecture', 'Lecture', 'required');
+            $this->form_validation->set_rules('Place', 'Lecture Place', 'required');
+            $this->form_validation->set_rules('LectureDate', 'Lecture Date', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo validation_errors();
+            } else {
+                $code = $this->session->userdata['user_data']['code']['Code'];
+                $form_data = $this->input->post();
+                $id = $form_data['Id'];
+                $image_path = $this->upload_file_and_get_path();
+                $this->load->model('Lectures');
+                $result = $this->Lectures->update_lecture($form_data, $code, $id, $image_path);
+                if ($result) {
+                    echo "Lecture successfully updated";
+                } else {
+                    echo "Something Went Wrong! ";
+                }
+            }
+        }
+    }
+
+    function add_lecture()
+    {
+        if (!$this->session->userdata('access_token')) {
+            $this->session->unset_userdata('access_token');
+            $this->session->unset_userdata('user_data');
+            redirect($GLOBALS['redirect_page']);
+            echo 'You are not allowed to login!!!';  // A alert message here!!
+        } else {
+            $this->load->helper(array('form', 'url'));
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('Lecture', 'Lecture', 'required');
+            $this->form_validation->set_rules('Place', 'Lecture Place', 'required');
+            $this->form_validation->set_rules('LectureDate', 'Lecture Date', 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo validation_errors();
+            } else {
+                $code = $this->session->userdata['user_data']['code']['Code'];
+                $form_data = $this->input->post();
+                $image_path = $this->upload_file_and_get_path();
+                $this->load->model('Lectures');
+                $count = $this->Lectures->select($code);
+                $count = sizeof($count);
+                $serial_no = $count + 1;
+                $this->load->model('Lectures');
+                $result = $this->Lectures->add_lecture($form_data, $code, $serial_no, $image_path);
+                if ($result) {
+                    echo "Lecture successfully Added";
+                } else {
+                    echo "Something Went Wrong! ";
+                }
+            }
+        }
+    }
+    
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //UPLOAD FUNCTION
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,7 +846,7 @@ class Google_login extends CI_Controller
         $this->load->library('upload');
         $image_path = "";
         $config['upload_path'] = './static/images/';
-        $config['allowed_types'] = 'jpg|jpeg|png|gif';
+        $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
         $config['encrypt_name'] = TRUE;
         $this->upload->initialize($config);
         if ($this->upload->do_upload('image_path')) {
@@ -484,6 +863,7 @@ class Google_login extends CI_Controller
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //LOGOUT
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     function logout()
     {

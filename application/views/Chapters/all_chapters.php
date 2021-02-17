@@ -17,28 +17,28 @@ $count =0;
           </div>
         </nav>
             <div class="heading btn btn-secondry">
-                <h4>Confrences List</h4>
+                <h4>Chapter List</h4>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Lecture</th>
-                        <th scope="col">Place</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Chapter Name</th>
+                        <th scope="col">Chapter Book</th>
+                        <th scope="col">Chapter Publisher</th>
                         <th scope="col">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($h as $lecture) { 
+                    <?php foreach ($h as $chapter) { 
                         $count++;
                     ?>
                         <tr>
                             <th scope="row"><?php echo $count; ?></th>
-                            <td><?php echo $lecture->Lecture ?></td>
-                            <td><?php echo $lecture->Place ?></td>
-                            <td><?php echo $lecture->LectureDate ?></td>
-                            <td><a href="<?php echo base_url(); ?>index.php/google_login/edit_lectures/<?php echo $lecture->id ?>">Edit </a> </td>
+                            <td><?php echo $chapter->ChapterName ?></td>
+                            <td><?php echo $chapter->ChapterBook ?></td>
+                            <td><?php echo $chapter->ChapterPublisher ?></td>
+                            <td><a href="<?php echo base_url(); ?>index.php/google_login/edit_chapters/<?php echo $chapter->id ?>">Edit </a> </td>
                         </tr>
                     <?php } ?>
                 </tbody>

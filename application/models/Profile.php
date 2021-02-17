@@ -2,15 +2,24 @@
 class Profile extends CI_Model
 {
    function __construct()
-   {
-      // Call the Model constructor  
+   {  
       parent::__construct();
    }
    
    
-   public function dummy()
+   public function get_code_from_serial_no($serial_no)
    {
-      $code = 'GKV/061'; 
+       // get code using email
+       $query = $this->db->query("Select Code from users WHERE serial_no = '$serial_no'");
+       $result = $query->result();
+       //print_r($result); die;
+       return $result;
+   }
+   
+      public function dummy()
+   {
+      $code = 'GKV/054';
+      //data is retrive from this query
       $query1 = $this->db->query("SELECT * FROM faculties WHERE user_id='$code'");
       $query2 = $this->db->query("SELECT * FROM journals WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");
       $query3 = $this->db->query("SELECT * FROM confrences WHERE user_id='$code' AND serial_no BETWEEN 1 and 10");

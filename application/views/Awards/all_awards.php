@@ -17,28 +17,28 @@ $count =0;
           </div>
         </nav>
             <div class="heading btn btn-secondry">
-                <h4>Confrences List</h4>
+                <h4>Book List</h4>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Lecture</th>
-                        <th scope="col">Place</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Award Name</th>
+                        <th scope="col">Award Agency</th>
+                        <th scope="col">Year of Recieving</th>
                         <th scope="col">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($h as $lecture) { 
+                    <?php foreach ($h as $award) { 
                         $count++;
                     ?>
                         <tr>
                             <th scope="row"><?php echo $count; ?></th>
-                            <td><?php echo $lecture->Lecture ?></td>
-                            <td><?php echo $lecture->Place ?></td>
-                            <td><?php echo $lecture->LectureDate ?></td>
-                            <td><a href="<?php echo base_url(); ?>index.php/google_login/edit_lectures/<?php echo $lecture->id ?>">Edit </a> </td>
+                            <td><?php echo $award->AwardName ?></td>
+                            <td><?php echo $award->AwardAgency ?></td>
+                            <td><?php echo $award->AwardYear ?></td>
+                            <td><a href="<?php echo base_url(); ?>index.php/google_login/edit_awards/<?php echo $award->id ?>">Edit </a> </td>
                         </tr>
                     <?php } ?>
                 </tbody>

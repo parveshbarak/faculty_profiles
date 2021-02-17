@@ -20,64 +20,45 @@
         </nav>
         <div class="generic_form">
             <div class="form-title text-center">
-                Books
+                Chapters
             </div>
-            <form id="add_book_form" method="POST" enctype="multipart/form-data">
+            <form id="add_chapter_form" method="POST" enctype="multipart/form-data">
                 <div class="form-group mt-3 ml-3">
-                    <label class="label" for="BookTitle">Book Title</label>
-                    <input type="text" class="form-control" id="BookTitle" name="BookTitle" autocomplete="none">
+                    <label class="label" for="ChapterTitle">Chapter Title</label>
+                    <input type="text" class="form-control" id="ChapterTitle" name="ChapterTitle" autocomplete="none">
                 </div>
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="BookAuthor">Book Author</label>
-                        <input type="text" class="form-control" id="BookAuthor" name="BookAuthor" autocomplete="none">
+                        <label class="label" for="ChapterBook">Chapter Book</label>
+                        <input type="text" class="form-control" id="ChapterBook" name="ChapterBook" autocomplete="none">
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="BookCoAuthor">Co-Author</label>
-                        <input type="text" name="BookCoAuthor" class="form-control" id="BookCoAuthor" autocomplete="none">
+                        <label class="label" for="ChapterScoper">Chapter Scoper</label>
+                        <input type="text" name="ChapterScoper" class="form-control" id="ChapterScoper" autocomplete="none">
                     </div>
                 </div>
-                <div class="form-group  col-md-6 mt-3 ml-3">
-                    <label class="label" for="Editor">Editor</label>
-                    <input type="text" name="Editor" class="form-control" id="Editor" autocomplete="none">
-                </div>
-                <div class="form-group  col-md-6 mt-3 ml-3">
-                    <label class="label" for="BookPublication">Book Publication</label>
-                    <input type="text" class="form-control" id="BookPublication" autocomplete="none" name="BookPublication">
-                </div>
-
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="BookISBN">Book ISBN </label>
-                        <input type="text" class="form-control" id="BookISBN" name="BookISBN" autocomplete="none">
+                        <label class="label" for="ChapterPage">Chapter Page </label>
+                        <input type="text" class="form-control" id="ChapterPage" name="ChapterPage" autocomplete="none">
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="BookPYear">Book Publication Year</label>
-                        <input type="text" class="form-control" id="BookPYear" name="BookPYear" autocomplete="none">
+                        <label class="label" for="ChapterPublisher">Chapter Publisher</label>
+                        <input type="text" class="form-control" id="ChapterPublisher" autocomplete="none" name="ChapterPublisher">
                     </div>
                 </div>
 
                 <div class="form-row row">
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="Page">Pages </label>
-                        <input type="text" class="form-control" id="Page" name="Page" autocomplete="none">
+                        <label class="label" for="CYear">Chapter Publishing Year</label>
+                        <input type="text" class="form-control" id="CYear" name="CYear" autocomplete="none">
                     </div>
                     <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="Impact">Impact </label>
-                        <input type="text" class="form-control" id="Impact" name="Impact" autocomplete="none">
+                        <label class="label" for="CMonth">Chapter Publishing Month</label>
+                        <input type="text" class="form-control" id="CMonth" name="CMonth" autocomplete="none">
                     </div>
                 </div>
-
-                <div class="form-row row">
-                    <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="APIList">API List </label>
-                        <input type="text" class="form-control" id="APIList" name="APIList" autocomplete="none">
-                    </div>
-                    <div class="form-group  col-md-6 mt-3 ml-3">
-                        <label class="label" for="APICount">API Count </label>
-                        <input type="text" class="form-control" id="APICount" name="APICount" autocomplete="none">
-                    </div>
-                </div>
+                
                 <div class="form-group mt-3 ml-3 ">
                     <div>
                         <label class="label">Upload Certifiacte/Document of Journal</label>
@@ -102,9 +83,9 @@
 
     <script type="text/javascript">
         $("button").click(function() {
-            var aProof = new FormData($("#add_book_form")[0]);
+            var aProof = new FormData($("#add_chapter_form")[0]);
             $.ajax({
-                url: 'http://localhost/faculty_profiles/index.php/google_login/add_book',
+                url: 'http://localhost/faculty_profiles/index.php/google_login/add_chapter',
                 type: 'POST',
                 data: aProof,
                 contentType: false,

@@ -1,78 +1,79 @@
 
-    
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Journals
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    function all_journals()
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //LECTURES
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function all_lectures()
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
-            $this->load->model('Journals');
-            $data['h'] = $this->Journals->select($code);
-            $this->load->view('Journals/all_journals', $data);
+            $this->load->model('Lectures');
+            $data['h'] = $this->Lectures->select($code);
+            $this->load->view('Lectures/all_lectures', $data);
         }
     }
 
-    function edit_journals()
+    function edit_lectures($lecture_id=NULL)
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $code = $this->session->userdata['user_data']['code']['Code'];
-            $uri = $_SERVER['REQUEST_URI'];
-            $uri_array = explode('/', $uri);
-            $journal_id = end($uri_array);
-            $this->load->model('Journals');
-            $data['h'] = $this->Journals->get_journal($code, $journal_id);
-            $this->load->view('Journals/edit_journals', $data);
+            $this->load->model('Lectures');
+            if($this->Lectures->get_lecture($code, $lecture_id)) {
+                $data['h'] = $this->Lectures->get_lecture($code, $lecture_id);
+                $this->load->view('Lectures/edit_lectures', $data);
+            } else {
+                echo 'No such Lecture';  // A alert message here!!
+                redirect($GLOBALS['lecture_redirect']);
+            }
         }
     }
 
-    function new_journal()
+    function new_lecture()
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
-            $this->load->view('Journals/add_journal');
+            $this->load->view('Lectures/add_lecture');
         }
     }
 
-    function update_journal()
+    function update_lecture()
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('PublType', 'Journal Type', 'required');
-            $this->form_validation->set_rules('Authors', 'Confrrence Place', 'required');
-            $this->form_validation->set_rules('Paper', 'Journal Topic', 'required');
-            $this->form_validation->set_rules('JournalName', 'Journal Organised By', 'required');
+            $this->form_validation->set_rules('Lecture', 'Lecture', 'required');
+            $this->form_validation->set_rules('Place', 'Lecture Place', 'required');
+            $this->form_validation->set_rules('LectureDate', 'Lecture Date', 'required');
             if ($this->form_validation->run() == FALSE) {
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
-                $id = $form_data['Id']; 
-                $this->load->model('Journals');
-                $result = $this->Journals->update_journal($form_data,$code,$id);
-                if($result) {
-                    echo "Journal successfully updated";
+                $form_data = $this->input->post();
+                $id = $form_data['Id'];
+                $image_path = $this->upload_file_and_get_path();
+                $this->load->model('Lectures');
+                $result = $this->Lectures->update_lecture($form_data, $code, $id, $image_path);
+                if ($result) {
+                    echo "Lecture successfully updated";
                 } else {
                     echo "Something Went Wrong! ";
                 }
@@ -80,34 +81,33 @@
         }
     }
 
-    function add_journal()
+    function add_lecture()
     {
         if (!$this->session->userdata('access_token')) {
             $this->session->unset_userdata('access_token');
             $this->session->unset_userdata('user_data');
-            redirect('index.php');
+            redirect($GLOBALS['redirect_page']);
             echo 'You are not allowed to login!!!';  // A alert message here!!
         } else {
             $this->load->helper(array('form', 'url'));
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('PublType', 'Journal Type', 'required');
-            $this->form_validation->set_rules('Authors', 'Confrrence Place', 'required');
-            $this->form_validation->set_rules('Paper', 'Journal Topic', 'required');
-            $this->form_validation->set_rules('JournalName', 'Journal Organised By', 'required');
+            $this->form_validation->set_rules('Lecture', 'Lecture', 'required');
+            $this->form_validation->set_rules('Place', 'Lecture Place', 'required');
+            $this->form_validation->set_rules('LectureDate', 'Lecture Date', 'required');
             if ($this->form_validation->run() == FALSE) {
                 echo validation_errors();
             } else {
                 $code = $this->session->userdata['user_data']['code']['Code'];
-                $form_data = $this->input->post(); 
+                $form_data = $this->input->post();
                 $image_path = $this->upload_file_and_get_path();
-                $this->load->model('Journals');
-                $count = $this->Journals->select($code);
+                $this->load->model('Lectures');
+                $count = $this->Lectures->select($code);
                 $count = sizeof($count);
                 $serial_no = $count + 1;
-                $this->load->model('Journals');
-                $result = $this->Journals->add_journal($form_data,$code,$serial_no,$image_path);
-                if($result) {
-                    echo "Journal successfully Added";
+                $this->load->model('Lectures');
+                $result = $this->Lectures->add_lecture($form_data, $code, $serial_no, $image_path);
+                if ($result) {
+                    echo "Lecture successfully Added";
                 } else {
                     echo "Something Went Wrong! ";
                 }
